@@ -15,12 +15,9 @@ class Program
     var esp8266Config = configuration.GetSection("ESP8266Config").Get<ESP8266Config>()
       ?? throw new InvalidOperationException("ESP8266Config section is not initialized correctly."); ;
 
-    LEDController ledController = new(esp8266Config.COMPort, esp8266Config.BaudRate);
-    var canConnect = ledController.Connect();
+    LEDController ledController = new(esp8266Config.IPAddress, esp8266Config.Port);
 
-    if (!canConnect) return;
 
-    // TODO parse args from user input when running CLI
     ledController.ConfigureLED(new()
     {
       Green = rand.Next(2) == 1,
