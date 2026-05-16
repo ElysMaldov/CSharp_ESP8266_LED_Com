@@ -2,7 +2,7 @@ using System.Text.Json;
 
 public record struct LEDControllerDTO(bool Red, bool Yellow, bool Green)
 {
-  public string SerializeJson()
+  public string ToJson()
   {
     string jsonOutput = JsonSerializer.Serialize(this, new JsonSerializerOptions()
     {
