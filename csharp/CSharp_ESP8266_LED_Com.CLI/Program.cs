@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 
 class Program
 {
+  static Random rand = new();
+
   public static void Main(string[] args)
   {
     // Setup appsettings
@@ -21,9 +23,9 @@ class Program
     // TODO parse args from user input when running CLI
     ledController.ConfigureLED(new()
     {
-      Green = false,
-      Yellow = true,
-      Red = false
+      Green = rand.Next(2) == 1,
+      Yellow = rand.Next(2) == 1,
+      Red = rand.Next(2) == 1,
     });
 
     Console.WriteLine("Sent!");
