@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include "led_handling.h"
+#include "connect_wifi/connect_wifi.h"
 
 // Pins
 int RED_LED = 16;
@@ -9,13 +10,15 @@ int GREEN_LED = 4;
 
 void setup()
 {
+  Serial.begin(115200);
 
+  connectToWiFi();
+
+  // Setup pins
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(RED_LED, OUTPUT);
   pinMode(YELLOW_LED, OUTPUT);
   pinMode(GREEN_LED, OUTPUT);
-
-  Serial.begin(115200);
 
   Serial.println("Ready to get messages!");
 }
