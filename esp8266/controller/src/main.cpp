@@ -1,16 +1,11 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
-
-char ledControllerDTOBuffer[43]; // total of our json is 41 + 1 for \n + 1 for null terminator
-JsonDocument ledControllerDTOJsonDoc;
+#include "led_handling.h"
 
 // Pins
 int RED_LED = 16;
 int YELLOW_LED = 5;
 int GREEN_LED = 4;
-
-void handleJsonDeserialization();
-void toggleLEDFromDTO(int pin, String key);
 
 void setup()
 {
@@ -39,20 +34,4 @@ void loop()
   toggleLEDFromDTO(RED_LED, "red");
   toggleLEDFromDTO(YELLOW_LED, "yellow");
   toggleLEDFromDTO(GREEN_LED, "green");
-}
-
-void handleJsonDeserialization()
-{
-  // Process data
-  int bytesRead = Serial.readBytesUntil('\n', ledControllerDTOBuffer, sizeof(ledControllerDTOBuffer) - 1);
-  ledControllerDTOBuffer[bytesRead] = '\0'; // null terminator to stop reading the string
-
-  deserializeJson(ledControllerDTOJsonDoc, ledControllerDTOBuffer);
-}
-
-void toggleLEDFromDTO(int pin, String key)
-{
-  bool control = ledControllerDTOJsonDoc[key];
-
-  digitalWrite(pin, control ? HIGH : LOW);
 }
