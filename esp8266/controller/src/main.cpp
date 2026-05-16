@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 
-char ledControllerDTOBuffer[42];
+char ledControllerDTOBuffer[43]; // total of our json is 41 + 1 for \n + 1 for null terminator
 JsonDocument ledControllerDTOJsonDoc;
 
 // Pins
