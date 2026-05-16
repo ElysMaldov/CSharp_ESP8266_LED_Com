@@ -35,16 +35,28 @@ void loop()
 
   // Its like express's req object, declare it here to make new object
   // on each loop if there is a connection happening
-  WiFiClient client = server.available();
+  WiFiClient client = server.accept();
 
-  if (!client.available())
-    return;
+  // Wait for data up to 5 secs bcs packets arrives later than the client's connection
+  unsigned long timeout = millis();
 
-  digitalWrite(LED_BUILTIN, LOW);
+  // Wait while client is still connected meaning it is still writing data and no client available
+  // means the data is not flushed yet by the client, with a max timeout or 5 secs
+  while (client.connected() && !client.available() && millis() - timeout < 5000)
+  {
+    delay(1);
+  }
 
-  handleJsonDeserialization(client);
+  // Only parse data if we actually have bytes. If we timeout, the data from the
+  // C# stream wont get flushed, therefore no byte is sent to the MCU
+  if (client.available() > 0)
+  {
+    digitalWrite(LED_BUILTIN, LOW);
 
-  toggleLEDFromDTO(RED_LED, "red");
-  toggleLEDFromDTO(YELLOW_LED, "yellow");
-  toggleLEDFromDTO(GREEN_LED, "green");
+    handleJsonDeserialization(client);
+
+    toggleLEDFromDTO(RED_LED, "red");
+    toggleLEDFromDTO(YELLOW_LED, "yellow");
+    toggleLEDFromDTO(GREEN_LED, "green");
+  }
 }
