@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
+#include <WiFiClient.h>
 
 #ifndef LED_HANDLING_H
 #define LED_HANDLING_H
@@ -8,7 +9,7 @@
 extern char ledControllerDTOBuffer[43]; // total of our json is 41 + 1 for \n + 1 for null terminator
 extern JsonDocument ledControllerDTOJsonDoc;
 
-void handleJsonDeserialization();
+void handleJsonDeserialization(WiFiClient &client);
 void toggleLEDFromDTO(int pin, String key);
 
 #endif
