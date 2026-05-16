@@ -14,13 +14,18 @@ class Program
       ?? throw new InvalidOperationException("ESP8266Config section is not initialized correctly."); ;
 
     LEDController ledController = new(esp8266Config.COMPort, esp8266Config.BaudRate);
+    var canConnect = ledController.Connect();
+
+    if (!canConnect) return;
 
     // TODO parse args from user input when running CLI
     ledController.ConfigureLED(new()
     {
-      Green = true,
-      Yellow = false,
-      Red = true
+      Green = false,
+      Yellow = true,
+      Red = false
     });
+
+    Console.WriteLine("Sent!");
   }
 }

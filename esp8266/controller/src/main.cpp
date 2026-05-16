@@ -9,6 +9,9 @@ int RED_LED = 16;
 int YELLOW_LED = 5;
 int GREEN_LED = 4;
 
+void handleJsonDeserialization();
+void toggleLEDFromDTO(int pin, String key);
+
 void setup()
 {
 
@@ -31,18 +34,25 @@ void loop()
 
   digitalWrite(LED_BUILTIN, LOW);
 
+  handleJsonDeserialization();
+
+  toggleLEDFromDTO(RED_LED, "red");
+  toggleLEDFromDTO(YELLOW_LED, "yellow");
+  toggleLEDFromDTO(GREEN_LED, "green");
+}
+
+void handleJsonDeserialization()
+{
   // Process data
   int bytesRead = Serial.readBytesUntil('\n', ledControllerDTOBuffer, sizeof(ledControllerDTOBuffer) - 1);
   ledControllerDTOBuffer[bytesRead] = '\0'; // null terminator to stop reading the string
 
   deserializeJson(ledControllerDTOJsonDoc, ledControllerDTOBuffer);
+}
 
-  bool redControl = ledControllerDTOJsonDoc["red"];
-  bool yellowControl = ledControllerDTOJsonDoc["yellow"];
-  bool greenControl = ledControllerDTOJsonDoc["green"];
+void toggleLEDFromDTO(int pin, String key)
+{
+  bool control = ledControllerDTOJsonDoc[key];
 
-  // Use values to GPIO pins
-  digitalWrite(RED_LED, redControl ? HIGH : LOW);
-  digitalWrite(YELLOW_LED, yellowControl ? HIGH : LOW);
-  digitalWrite(GREEN_LED, greenControl ? HIGH : LOW);
+  digitalWrite(pin, control ? HIGH : LOW);
 }
